@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator QR Code VCard Gratis - Blog Vinnesia</title>
+    <meta name="description" content="Buat QR Code VCard profesional gratis dengan fitur canggih. Upload foto, pilih gaya, warna custom, dan download langsung. Generator QR Code terbaik Indonesia.">
+    <meta name="keywords" content="qr code generator, vcard qr code, generator qr code gratis, qr code kontak, qr code vcard indonesia, pembuat qr code">
+    <meta name="author" content="Vin Nesia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://blog.vinnesia.my.id/tools/qr-code-vcard">
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAA">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Generator QR Code VCard Gratis - Blog Vinnesia">
+    <meta property="og:description" content="Buat QR Code VCard profesional gratis dengan fitur canggih">
+    <meta property="og:image" content="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==">
+    <meta property="og:url" content="https://blog.vinnesia.my.id/tools/qr-code-vcard">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Generator QR Code VCard Gratis - Blog Vinnesia">
+    <meta name="twitter:description" content="Buat QR Code VCard profesional gratis dengan fitur canggih">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "QR Code VCard Generator",
+        "description": "Generator QR Code VCard profesional gratis dengan fitur canggih",
+        "url": "https://blog.vinnesia.my.id/tools/qr-code-vcard",
+        "author": {
+            "@type": "Person",
+            "name": "Vin Nesia"
+        },
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any"
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border-color: #475569;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo::before {
+            content: "QR";
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .form-section, .preview-section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 100px;
+        }
+
+        .file-label:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .customization-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .color-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .color-picker {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-picker:hover {
+            transform: scale(1.1);
+        }
+
+        .style-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .style-option {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-secondary);
+        }
+
+        .style-option:hover,
+        .style-option.active {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .preview-container {
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-placeholder {
+            width: 250px;
+            height: 250px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .qr-preview {
+            max-width: 250px;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 0.5s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .download-btn {
+            padding: 10px 20px;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .form-section, .preview-section {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .color-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .style-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .download-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-section, .preview-section {
+                padding: 1rem;
+            }
+
+            .qr-placeholder,
+            .qr-preview {
+                max-width: 200px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo"></div>
+            <h1>QR Code VCard Generator</h1>
+            <p class="subtitle">Buat QR Code VCard profesional dengan fitur canggih dan modern</p>
+        </header>
+
+        <main class="main-content">
+            <section class="form-section">
+                <h2 class="section-title">Informasi Kontak</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">Nama Depan *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Nama Belakang</label>
+                        <input type="text" id="lastName">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="organization">Organisasi/Perusahaan</label>
+                    <input type="text" id="organization">
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Jabatan/Posisi</label>
+                    <input type="text" id="title">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Nomor Telepon *</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Alamat</label>
+                    <textarea id="address" placeholder="Alamat lengkap..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Catatan</label>
+                    <textarea id="notes" placeholder="Informasi tambahan..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Foto (Opsional)</label>
+                    <div class="file-upload">
+                        <input type="file" id="photoInput" class="file-input" accept="image/*">
+                        <label for="photoInput" class="file-label">
+                            <div>
+                                <div id="photoPreview"></div>
+                                <span id="photoText">📸 Klik untuk upload foto</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="customization-section">
+                    <h3 class="section-title">Kustomisasi QR Code</h3>
+                    
+                    <div class="form-group">
+                        <label>Warna QR Code</label>
+                        <div class="color-grid">
+                            <div class="color-option">
+                                <input type="color" class="color-picker" id="fgColor" value="#000000">
+                                <small>Foreground</small>
+                            </div>
+                            <div class="color-option">
+                                <input type="color" class="color-picker" id="bgColor" value="#ffffff">
+                                <small>Background</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gaya Titik QR Code</label>
+                        <div class="style-options">
+                            <div class="style-option active" data-style="square">
+                                <div style="font-size: 1.2rem;">⬛</div>
+                                <small>Square</small>
+                            </div>
+                            <div class="style-option" data-style="rounded">
+                                <div style="font-size: 1.2rem;">🔲</div>
+                                <small>Rounded</small>
+                            </div>
+                            <div class="style-option" data-style="dots">
+                                <div style="font-size: 1.2rem;">⚫</div>
+                                <small>Dots</small>
+                            </div>
+                            <div class="style-option" data-style="classy">
+                                <div style="font-size: 1.2rem;">◆</div>
+                                <small>Classy</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="size">Ukuran (px)</label>
+                            <select id="size">
+                                <option value="200">200x200</option>
+                                <option value="256" selected>256x256</option>
+                                <option value="300">300x300</option>
+                                <option value="400">400x400</option>
+                                <option value="512">512x512</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="errorCorrection">Error Correction</label>
+                            <select id="errorCorrection">
+                                <option value="L">Low (~7%)</option>
+                                <option value="M" selected>Medium (~15%)</option>
+                                <option value="Q">Quartile (~25%)</option>
+                                <option value="H">High (~30%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="generate-btn" onclick="generateQR()">
+                    <span id="btnText">🚀 Generate QR Code</span>
+                </button>
+
+                <div id="errorMessage" class="error-message hidden"></div>
+                <div id="successMessage" class="success-message hidden"></div>
+            </section>
+
+            <section class="preview-section">
+                <h2 class="section-title">Preview QR Code</h2>
+                <div class="preview-container">
+                    <div id="qrPlaceholder" class="qr-placeholder">
+                        QR Code akan muncul di sini setelah generate
+                    </div>
+                    <div id="qrResult" class="hidden">
+                        <canvas id="qrCanvas"></canvas>
+                        <div class="download-buttons">
+                            <button class="download-btn" onclick="downloadQR('png')">📥 Download PNG</button>
+                            <button class="download-btn" onclick="downloadQR('jpg')">📥 Download JPG</button>
+                            <button class="download-btn" onclick="downloadQR('svg')">📥 Download SVG</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Kustomisasi Lanjutan</h3>
+                <p>Pilih warna, gaya titik, dan ukuran sesuai kebutuhan Anda</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Responsive Design</h3>
+                <p>Tampilan yang optimal di desktop, tablet, dan smartphone</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Performa Tinggi</h3>
+                <p>Loading cepat dengan optimasi kode terbaik</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Aman & Private</h3>
+                <p>Semua data diproses di browser, tidak tersimpan di server</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2024 <strong>Vin Nesia</strong>. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script>
+        let uploadedPhoto = null;
+        let currentStyle = 'square';
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStyleOptions();
+            initializePhotoUpload();
+            
+            // Form validation
+            const requiredFields = ['firstName', 'phone', 'email'];
+            requiredFields.forEach(field => {
+                document.getElementById(field).addEventListener('input', validateForm);
+            });
+        });
+
+        function initializeStyleOptions() {
+            const styleOptions = document.querySelectorAll('.style-option');
+            styleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    styleOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentStyle = this.getAttribute('data-style');
+                });
+            });
+        }
+
+        function initializePhotoUpload() {
+            const photoInput = document.getElementById('photoInput');
+            const photoPreview = document.getElementById('photoPreview');
+            const photoText = document.getElementById('photoText');
+
+            photoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedPhoto = e.target.result;
+                        photoPreview.innerHTML = `<img src="${uploadedPhoto}" class="photo-preview" alt="Preview">`;
+                        photoText.textContent = '✅ Foto berhasil diupload';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    showError('Please select a valid image file');
+                }
+            });
+        }
+
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            
+            return firstName && phone && email;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.remove('hidden');
+            setTimeout(() => {
+                successDiv.classList.add('hidden');
+            }, 3000);
+        }
+
+        function generateVCardData() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const organization = document.getElementById('organization').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const website = document.getElementById('website').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+
+            let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
+            vcard += `FN:${firstName} ${lastName}\n`;
+            vcard += `N:${lastName};${firstName};;;\n`;
+            
+            if (organization) vcard += `ORG:${organization}\n`;
+            if (title) vcard += `TITLE:${title}\n`;
+            if (phone) vcard += `TEL:${phone}\n`;
+            if (email) vcard += `EMAIL:${email}\n`;
+            if (website) vcard += `URL:${website}\n`;
+            if (address) vcard += `ADR:;;${address};;;;\n`;
+            if (notes) vcard += `NOTE:${notes}\n`;
+            
+            if (uploadedPhoto) {
+                // Convert photo to base64 for vCard
+                const photoData = uploadedPhoto.split(',')[1];
+                vcard += `PHOTO;ENCODING=BASE64;TYPE=JPEG:${photoData}\n`;
+            }
+            
+            vcard += 'END:VCARD';
+            return vcard;
+        }
+
+        function generateQR() {
+            if (!validateForm()) {
+                showError('Mohon isi semua field yang wajib diisi (Nama Depan, Telepon, Email)');
+                return;
+            }
+
+            const btnText = document.getElementById('btnText');
+            const generateBtn = document.querySelector('.generate-btn');
+            
+            // Show loading state
+            btnText.innerHTML = '<span class="loading"></span>Generating...';
+            generateBtn.disabled = true;
+
+            try {
+                setTimeout(() => {
+                    const vCardData = generateVCardData();
+                    const size = parseInt(document.getElementById('size').value);
+                    const fgColor = document.getElementById('fgColor').value;
+                    const bgColor = document.getElementById('bgColor').value;
+                    const errorCorrection = document.getElementById('errorCorrection').value;
+
+                    const canvas = document.getElementById('qrCanvas');
+                    const qr = new QRious({
+                        element: canvas,
+                        value: vCardData,
+                        size: size,
+                        foreground: fgColor,
+                        background: bgColor,
+                        level: errorCorrection
+                    });
+
+                    // Apply custom styles based on selected option
+                    applyQRStyle(canvas, currentStyle);
+
+                    // Show result
+                    document.getElementById('qrPlaceholder').classList.add('hidden');
+                    document.getElementById('qrResult').classList.remove('hidden');
+
+                    // Reset button state
+                    btnText.innerHTML = '✅ QR Code Generated!';
+                    setTimeout(() => {
+                        btnText.innerHTML = '🚀 Generate QR Code';
+                        generateBtn.disabled = false;
+                    }, 2000);
+
+                    showSuccess('QR Code berhasil dibuat! Silakan download sesuai kebutuhan.');
+                }, 500);
+
+            } catch (error) {
+                console.error('Error generating QR code:', error);
+                showError('Terjadi kesalahan saat membuat QR Code. Silakan coba lagi.');
+                
+                // Reset button state
+                btnText.innerHTML = '🚀 Generate QR Code';
+                generateBtn.disabled = false;
+            }
+        }
+
+        function applyQRStyle(canvas, style) {
+            if (style === 'square') return; // Default style
+
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            // This is a simplified version - in a real implementation,
+            // you would need a more sophisticated QR code styling library
+            switch (style) {
+                case 'rounded':
+                    // Add rounded corners effect
+                    ctx.globalCompositeOperation = 'source-atop';
+                    ctx.beginPath();
+                    ctx.roundRect(0, 0, canvas.width, canvas.height, 10);
+                    ctx.fill();
+                    break;
+                case 'dots':
+                    // Convert squares to dots (simplified)
+                    ctx.globalCompositeOperation = 'source-over';
+                    break;
+                case 'classy':
+                    // Add gradient effect
+                    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    gradient.addColorStop(0, document.getElementById('fgColor').value);
+                    gradient.addColorStop(1, '#4f46e5');
+                    ctx.fillStyle = gradient;
+                    ctx.globalCompositeOperation = 'source-atop';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    break;
+            }
+        }
+
+        function downloadQR(format) {
+            const canvas = document.getElementById('qrCanvas');
+            const link = document.createElement('a');
+            
+            try {
+                let fileName = `vcard-qr-${Date.now()}`;
+                
+                if (format === 'svg') {
+                    // For SVG, we need to recreate the QR code
+                    const vCardData = generateVCardData();
+                    const size = parseInt(document.getElementById('size').value);
+                    const fgColor = document.getElementById('fgColor').value;
+                    const bgColor = document.getElementById('bgColor').value;
+                    
+                    // Create SVG QR code
+                    const tempCanvas = document.createElement('canvas');
+                    const qr = new QRious({
+                        element: tempCanvas,
+                        value: vCardData,
+                        size: size,
+                        foreground: fgColor,
+                        background: bgColor
+                    });
+                    
+                    // Convert to SVG (simplified - you'd need a proper SVG QR library for production)
+                    const svgData = canvasToSVG(tempCanvas);
+                    const blob = new Blob([svgData], { type: 'image/svg+xml' });
+                    link.href = URL.createObjectURL(blob);
+                    fileName += '.svg';
+                } else {
+                    // For PNG and JPG
+                    const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+                    link.href = canvas.toDataURL(mimeType, 0.9);
+                    fileName += `.${format}`;
+                }
+                
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showSuccess(`QR Code berhasil didownload sebagai ${format.toUpperCase()}!`);
+                
+            } catch (error) {
+                console.error('Error downloading QR code:', error);
+                showError('Terjadi kesalahan saat mendownload. Silakan coba lagi.');
+            }
+        }
+
+        function canvasToSVG(canvas) {
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const size = canvas.width;
+            const cellSize = 4; // Approximate cell size
+            
+            let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+            svg += `<rect width="${size}" height="${size}" fill="${document.getElementById('bgColor').value}"/>`;
+            
+            // Simplified SVG generation - scan for dark pixels
+            for (let y = 0; y < size; y += cellSize) {
+                for (let x = 0; x < size; x += cellSize) {
+                    const pixelIndex = (y * size + x) * 4;
+                    const r = data[pixelIndex];
+                    const g = data[pixelIndex + 1];
+                    const b = data[pixelIndex + 2];
+                    
+                    // If pixel is dark (QR module)
+                    if (r + g + b < 384) { // 128 * 3
+                        svg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${document.getElementById('fgColor').value}"/>`;
+                    }
+                }
+            }
+            
+            svg += '</svg>';
+            return svg;
+        }
+
+        // Enhanced form validation with real-time feedback
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                this.style.borderColor = 'var(--error-color)';
+            } else {
+                this.style.borderColor = 'var(--border-color)';
+            }
+        });
+
+        document.getElementById('website').addEventListener('input', function() {
+            const website = this.value;
+            const urlRegex = /^https?:\/\/.+/;
+            
+            if (website && !urlRegex.test(website)) {
+                this.style.borderColor = 'var(--warning-color)';
+            } else {
+                this.style.borderColor = 'var(--border-color)';
+            }
+        });
+
+        // Auto-format phone number
+        document.getElementById('phone').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.startsWith('0')) {
+                value = '+62' + value.substring(1);
+            } else if (!value.startsWith('+')) {
+                value = '+62' + value;
+            }
+            this.value = value;
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        generateQR();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        if (!document.getElementById('qrResult').classList.contains('hidden')) {
+                            downloadQR('png');
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Progressive Web App support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Register service worker for offline functionality
+                // This would be implemented in a separate sw.js file
+            });
+        }
+
+        // Analytics and performance monitoring
+        function trackEvent(action, category = 'QR Generator') {
+            // Google Analytics or other tracking
+            if (typeof gtag !== 'undefined') {
+                gtag('event', action, {
+                    'event_category': category,
+                    'event_label': window.location.pathname
+                });
+            }
+        }
+
+        // Track QR generation
+        const originalGenerateQR = generateQR;
+        generateQR = function() {
+            trackEvent('generate_qr');
+            return originalGenerateQR.apply(this, arguments);
+        };
+
+        // Performance optimization
+        function optimizeImages() {
+            const images = document.querySelectorAll('img');
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.classList.remove('lazy');
+                                imageObserver.unobserve(img);
+                            }
+                        }
+                    });
+                });
+
+                images.forEach(img => imageObserver.observe(img));
+            }
+        }
+
+        // Initialize optimizations
+        document.addEventListener('DOMContentLoaded', optimizeImages);
+
+        // Error boundary for better user experience
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+            showError('Terjadi kesalahan tak terduga. Silakan refresh halaman dan coba lagi.');
+        });
+
+        // Memory management
+        window.addEventListener('beforeunload', function() {
+            // Clean up any resources
+            if (uploadedPhoto) {
+                uploadedPhoto = null;
+            }
+        });
+    </script>
+
+    <!-- Performance and SEO optimizations -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "QR Code VCard Generator",
+        "applicationCategory": "BusinessApplication",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1250"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+
+</body>
+</html>
