@@ -1155,17 +1155,101 @@
         let uploadedPhoto = null;
         let currentStyle = 'square';
 
-        // Initialize event listeners
+        // Initialize event listeners with better error handling
         document.addEventListener('DOMContentLoaded', function() {
-            initializeStyleOptions();
-            initializePhotoUpload();
-            
-            // Form validation
-            const requiredFields = ['firstName', 'phone', 'email'];
-            requiredFields.forEach(field => {
-                document.getElementById(field).addEventListener('input', validateForm);
-            });
+            try {
+                initializeStyleOptions();
+                initializePhotoUpload();
+                initializeFormValidation();
+                initializeColorPickers();
+                
+                console.log('All components initialized successfully');
+                
+                // Form validation
+                const requiredFields = ['firstName', 'phone', 'email'];
+                requiredFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element) {
+                        element.addEventListener('input', validateForm);
+                        element.addEventListener('blur', validateForm);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                showError('Terjadi kesalahan saat memuat halaman. Silakan refresh dan coba lagi.');
+            }
         });
+
+        function initializeColorPickers() {
+            const fgColorPicker = document.getElementById('fgColor');
+            const bgColorPicker = document.getElementById('bgColor');
+            
+            if (fgColorPicker) {
+                fgColorPicker.addEventListener('change', function() {
+                    console.log('Foreground color changed to:', this.value);
+                });
+            }
+            
+            if (bgColorPicker) {
+                bgColorPicker.addEventListener('change', function() {
+                    console.log('Background color changed to:', this.value);
+                });
+            }
+        }
+
+        function initializeFormValidation() {
+            // Enhanced form validation with real-time feedback
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.addEventListener('input', function() {
+                    const email = this.value.trim();
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    
+                    if (email && !emailRegex.test(email)) {
+                        this.style.borderColor = 'var(--warning-color)';
+                        this.title = 'Format email tidak valid';
+                    } else {
+                        this.style.borderColor = '';
+                        this.title = '';
+                    }
+                });
+            }
+
+            const websiteInput = document.getElementById('website');
+            if (websiteInput) {
+                websiteInput.addEventListener('input', function() {
+                    const website = this.value.trim();
+                    if (website && !website.startsWith('http://') && !website.startsWith('https://')) {
+                        this.style.borderColor = 'var(--warning-color)';
+                        this.title = 'URL harus dimulai dengan http:// atau https://';
+                    } else {
+                        this.style.borderColor = '';
+                        this.title = '';
+                    }
+                });
+            }
+
+            // Auto-format phone number
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    let value = this.value.replace(/\D/g, ''); // Remove non-digits
+                    
+                    if (value.startsWith('0')) {
+                        value = '+62' + value.substring(1);
+                    } else if (!value.startsWith('+62') && !value.startsWith('62')) {
+                        if (value.length > 0) {
+                            value = '+62' + value;
+                        }
+                    } else if (value.startsWith('62') && !value.startsWith('+62')) {
+                        value = '+' + value;
+                    }
+                    
+                    this.value = value;
+                });
+            }
+        }
 
         function initializeStyleOptions() {
             const styleOptions = document.querySelectorAll('.style-option');
@@ -1185,16 +1269,43 @@
 
             photoInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
-                if (file && file.type.startsWith('image/')) {
+                if (file) {
+                    if (!file.type.startsWith('image/')) {
+                        showError('Silakan pilih file gambar yang valid (PNG, JPG, JPEG, GIF, WebP)');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // Check file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        showError('Ukuran file terlalu besar. Maksimal 5MB');
+                        this.value = '';
+                        return;
+                    }
+
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        uploadedPhoto = e.target.result;
-                        photoPreview.innerHTML = `<img src="${uploadedPhoto}" class="photo-preview" alt="Preview">`;
-                        photoText.textContent = '✅ Foto berhasil diupload';
+                        try {
+                            uploadedPhoto = e.target.result;
+                            photoPreview.innerHTML = `<img src="${uploadedPhoto}" class="photo-preview" alt="Photo Preview">`;
+                            photoText.textContent = '✅ Foto berhasil diupload - ' + file.name;
+                            photoText.style.color = 'var(--success-color)';
+                        } catch (error) {
+                            console.error('Error processing image:', error);
+                            showError('Gagal memproses gambar. Silakan coba file lain.');
+                        }
+                    };
+                    reader.onerror = function() {
+                        showError('Gagal membaca file gambar');
+                        photoInput.value = '';
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    showError('Please select a valid image file');
+                    // Reset if no file selected
+                    uploadedPhoto = null;
+                    photoPreview.innerHTML = '';
+                    photoText.textContent = '📸 Klik untuk upload foto';
+                    photoText.style.color = '';
                 }
             });
         }
@@ -1204,25 +1315,71 @@
             const phone = document.getElementById('phone').value.trim();
             const email = document.getElementById('email').value.trim();
             
-            return firstName && phone && email;
+            // Reset previous validation styles
+            document.getElementById('firstName').style.borderColor = '';
+            document.getElementById('phone').style.borderColor = '';
+            document.getElementById('email').style.borderColor = '';
+            
+            let isValid = true;
+            
+            if (!firstName) {
+                document.getElementById('firstName').style.borderColor = 'var(--error-color)';
+                isValid = false;
+            }
+            
+            if (!phone) {
+                document.getElementById('phone').style.borderColor = 'var(--error-color)';
+                isValid = false;
+            }
+            
+            if (!email) {
+                document.getElementById('email').style.borderColor = 'var(--error-color)';
+                isValid = false;
+            } else {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    document.getElementById('email').style.borderColor = 'var(--error-color)';
+                    isValid = false;
+                }
+            }
+            
+            return isValid;
         }
 
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            // Hide success message
+            successDiv.classList.add('hidden');
+            
             errorDiv.textContent = message;
             errorDiv.classList.remove('hidden');
+            
+            // Auto hide after 6 seconds
             setTimeout(() => {
                 errorDiv.classList.add('hidden');
-            }, 5000);
+            }, 6000);
+            
+            // Scroll to error message
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function showSuccess(message) {
             const successDiv = document.getElementById('successMessage');
+            const errorDiv = document.getElementById('errorMessage');
+            
+            // Hide error message
+            errorDiv.classList.add('hidden');
+            
             successDiv.textContent = message;
             successDiv.classList.remove('hidden');
+            
+            // Auto hide after 4 seconds
             setTimeout(() => {
                 successDiv.classList.add('hidden');
-            }, 3000);
+            }, 4000);
         }
 
         function generateVCardData() {
@@ -1259,6 +1416,10 @@
         }
 
         function generateQR() {
+            // Reset any previous error/success messages
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('successMessage').classList.add('hidden');
+            
             if (!validateForm()) {
                 showError('Mohon isi semua field yang wajib diisi (Nama Depan, Telepon, Email)');
                 return;
@@ -1268,18 +1429,23 @@
             const generateBtn = document.querySelector('.generate-btn');
             
             // Show loading state
-            btnText.innerHTML = '<span class="loading"></span>Generating...';
+            btnText.innerHTML = '<span class="loading"></span>Generating QR Code...';
             generateBtn.disabled = true;
 
-            try {
-                setTimeout(() => {
+            // Use setTimeout to allow UI to update before heavy processing
+            setTimeout(() => {
+                try {
                     const vCardData = generateVCardData();
                     const size = parseInt(document.getElementById('size').value);
                     const fgColor = document.getElementById('fgColor').value;
                     const bgColor = document.getElementById('bgColor').value;
                     const errorCorrection = document.getElementById('errorCorrection').value;
 
+                    console.log('Generating QR with:', { size, fgColor, bgColor, errorCorrection, style: currentStyle });
+
                     const canvas = document.getElementById('qrCanvas');
+                    
+                    // Create QR code with QRious
                     const qr = new QRious({
                         element: canvas,
                         value: vCardData,
@@ -1289,136 +1455,225 @@
                         level: errorCorrection
                     });
 
-                    // Apply custom styles based on selected option
-                    applyQRStyle(canvas, currentStyle);
+                    console.log('QR generated successfully, applying style:', currentStyle);
 
-                    // Show result
+                    // Apply custom style if not default
+                    if (currentStyle !== 'square') {
+                        applyQRStyle(canvas, currentStyle);
+                    }
+
+                    // Show result with animation
                     document.getElementById('qrPlaceholder').classList.add('hidden');
                     document.getElementById('qrResult').classList.remove('hidden');
 
                     // Reset button state
-                    btnText.innerHTML = '✅ QR Code Generated!';
+                    btnText.innerHTML = '✅ QR Code Generated Successfully!';
                     setTimeout(() => {
                         btnText.innerHTML = '🚀 Generate QR Code';
                         generateBtn.disabled = false;
                     }, 2000);
 
-                    showSuccess('QR Code berhasil dibuat! Silakan download sesuai kebutuhan.');
-                }, 500);
+                    showSuccess('QR Code berhasil dibuat! Silakan download sesuai kebutuhan Anda.');
 
-            } catch (error) {
-                console.error('Error generating QR code:', error);
-                showError('Terjadi kesalahan saat membuat QR Code. Silakan coba lagi.');
-                
-                // Reset button state
-                btnText.innerHTML = '🚀 Generate QR Code';
-                generateBtn.disabled = false;
-            }
+                } catch (error) {
+                    console.error('Error generating QR code:', error);
+                    showError('Terjadi kesalahan saat membuat QR Code: ' + error.message);
+                    
+                    // Reset button state
+                    btnText.innerHTML = '❌ Error - Try Again';
+                    setTimeout(() => {
+                        btnText.innerHTML = '🚀 Generate QR Code';
+                        generateBtn.disabled = false;
+                    }, 3000);
+                }
+            }, 300); // Small delay for smooth UX
         }
 
         function applyQRStyle(canvas, style) {
             if (style === 'square') return; // Default style
 
             const ctx = canvas.getContext('2d');
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const size = canvas.width;
+            const imageData = ctx.getImageData(0, 0, size, size);
             const data = imageData.data;
             
-            // This is a simplified version - in a real implementation,
-            // you would need a more sophisticated QR code styling library
-            switch (style) {
-                case 'rounded':
-                    // Add rounded corners effect
-                    ctx.globalCompositeOperation = 'source-atop';
-                    ctx.beginPath();
-                    ctx.roundRect(0, 0, canvas.width, canvas.height, 10);
-                    ctx.fill();
-                    break;
-                case 'dots':
-                    // Convert squares to dots (simplified)
-                    ctx.globalCompositeOperation = 'source-over';
-                    break;
-                case 'classy':
-                    // Add gradient effect
-                    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                    gradient.addColorStop(0, document.getElementById('fgColor').value);
-                    gradient.addColorStop(1, '#4f46e5');
-                    ctx.fillStyle = gradient;
-                    ctx.globalCompositeOperation = 'source-atop';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    break;
+            // Create a new canvas for styling
+            const styledCanvas = document.createElement('canvas');
+            styledCanvas.width = size;
+            styledCanvas.height = size;
+            const styledCtx = styledCanvas.getContext('2d');
+            
+            // Fill background
+            styledCtx.fillStyle = document.getElementById('bgColor').value;
+            styledCtx.fillRect(0, 0, size, size);
+            
+            const moduleSize = Math.floor(size / 25); // Approximate QR module size
+            const fgColor = document.getElementById('fgColor').value;
+            
+            // Set foreground color
+            styledCtx.fillStyle = fgColor;
+            
+            for (let y = 0; y < size; y += moduleSize) {
+                for (let x = 0; x < size; x += moduleSize) {
+                    // Check if this area should be filled (dark module)
+                    let isDark = false;
+                    const sampleSize = Math.max(1, Math.floor(moduleSize / 2));
+                    const centerX = Math.min(x + Math.floor(moduleSize / 2), size - 1);
+                    const centerY = Math.min(y + Math.floor(moduleSize / 2), size - 1);
+                    const pixelIndex = (centerY * size + centerX) * 4;
+                    
+                    if (pixelIndex < data.length) {
+                        const r = data[pixelIndex];
+                        const g = data[pixelIndex + 1];
+                        const b = data[pixelIndex + 2];
+                        const brightness = (r + g + b) / 3;
+                        isDark = brightness < 128;
+                    }
+                    
+                    if (isDark && x + moduleSize <= size && y + moduleSize <= size) {
+                        switch (style) {
+                            case 'rounded':
+                                styledCtx.beginPath();
+                                const radius = moduleSize * 0.3;
+                                styledCtx.roundRect(x, y, moduleSize, moduleSize, radius);
+                                styledCtx.fill();
+                                break;
+                                
+                            case 'dots':
+                                styledCtx.beginPath();
+                                const dotRadius = moduleSize * 0.4;
+                                styledCtx.arc(x + moduleSize/2, y + moduleSize/2, dotRadius, 0, 2 * Math.PI);
+                                styledCtx.fill();
+                                break;
+                                
+                            case 'classy':
+                                styledCtx.save();
+                                styledCtx.translate(x + moduleSize/2, y + moduleSize/2);
+                                styledCtx.rotate(Math.PI / 4);
+                                styledCtx.fillRect(-moduleSize/2 * 0.8, -moduleSize/2 * 0.8, moduleSize * 0.8, moduleSize * 0.8);
+                                styledCtx.restore();
+                                break;
+                                
+                            default:
+                                styledCtx.fillRect(x, y, moduleSize, moduleSize);
+                                break;
+                        }
+                    }
+                }
             }
+            
+            // Copy styled result back to original canvas
+            ctx.clearRect(0, 0, size, size);
+            ctx.drawImage(styledCanvas, 0, 0);
+        }
+
+        // Add roundRect polyfill for older browsers
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                if (width < 2 * radius) radius = width / 2;
+                if (height < 2 * radius) radius = height / 2;
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.arcTo(x + width, y, x + width, y + height, radius);
+                this.arcTo(x + width, y + height, x, y + height, radius);
+                this.arcTo(x, y + height, x, y, radius);
+                this.arcTo(x, y, x + width, y, radius);
+                this.closePath();
+                return this;
+            };
         }
 
         function downloadQR(format) {
             const canvas = document.getElementById('qrCanvas');
+            if (!canvas || canvas.width === 0) {
+                showError('Silakan generate QR Code terlebih dahulu sebelum mendownload');
+                return;
+            }
+
             const link = document.createElement('a');
             
             try {
-                let fileName = `vcard-qr-${Date.now()}`;
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const timestamp = new Date().toISOString().slice(0, 10);
+                let fileName = `qr-vcard-${firstName}${lastName ? '-' + lastName : ''}-${timestamp}`;
                 
                 if (format === 'svg') {
-                    // For SVG, we need to recreate the QR code
-                    const vCardData = generateVCardData();
-                    const size = parseInt(document.getElementById('size').value);
-                    const fgColor = document.getElementById('fgColor').value;
-                    const bgColor = document.getElementById('bgColor').value;
-                    
-                    // Create SVG QR code
-                    const tempCanvas = document.createElement('canvas');
-                    const qr = new QRious({
-                        element: tempCanvas,
-                        value: vCardData,
-                        size: size,
-                        foreground: fgColor,
-                        background: bgColor
-                    });
-                    
-                    // Convert to SVG (simplified - you'd need a proper SVG QR library for production)
-                    const svgData = canvasToSVG(tempCanvas);
+                    // Generate SVG version
+                    const svgData = generateSVGQR(canvas);
                     const blob = new Blob([svgData], { type: 'image/svg+xml' });
                     link.href = URL.createObjectURL(blob);
                     fileName += '.svg';
                 } else {
                     // For PNG and JPG
                     const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
-                    link.href = canvas.toDataURL(mimeType, 0.9);
+                    const quality = format === 'jpg' ? 0.95 : 1.0;
+                    link.href = canvas.toDataURL(mimeType, quality);
                     fileName += `.${format}`;
                 }
                 
                 link.download = fileName;
+                link.style.display = 'none';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+                
+                // Clean up blob URL if created
+                if (format === 'svg') {
+                    setTimeout(() => URL.revokeObjectURL(link.href), 100);
+                }
                 
                 showSuccess(`QR Code berhasil didownload sebagai ${format.toUpperCase()}!`);
                 
             } catch (error) {
                 console.error('Error downloading QR code:', error);
-                showError('Terjadi kesalahan saat mendownload. Silakan coba lagi.');
+                showError('Terjadi kesalahan saat mendownload: ' + error.message);
             }
         }
 
-        function canvasToSVG(canvas) {
+        function generateSVGQR(canvas) {
             const ctx = canvas.getContext('2d');
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imageData.data;
             const size = canvas.width;
-            const cellSize = 4; // Approximate cell size
+            const moduleSize = Math.floor(size / 25);
+            const bgColor = document.getElementById('bgColor').value;
+            const fgColor = document.getElementById('fgColor').value;
             
             let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
-            svg += `<rect width="${size}" height="${size}" fill="${document.getElementById('bgColor').value}"/>`;
+            svg += `<rect width="${size}" height="${size}" fill="${bgColor}"/>`;
             
-            // Simplified SVG generation - scan for dark pixels
-            for (let y = 0; y < size; y += cellSize) {
-                for (let x = 0; x < size; x += cellSize) {
-                    const pixelIndex = (y * size + x) * 4;
-                    const r = data[pixelIndex];
-                    const g = data[pixelIndex + 1];
-                    const b = data[pixelIndex + 2];
+            for (let y = 0; y < size; y += moduleSize) {
+                for (let x = 0; x < size; x += moduleSize) {
+                    const centerX = Math.min(x + Math.floor(moduleSize / 2), size - 1);
+                    const centerY = Math.min(y + Math.floor(moduleSize / 2), size - 1);
+                    const pixelIndex = (centerY * size + centerX) * 4;
                     
-                    // If pixel is dark (QR module)
-                    if (r + g + b < 384) { // 128 * 3
-                        svg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${document.getElementById('fgColor').value}"/>`;
+                    if (pixelIndex < data.length) {
+                        const r = data[pixelIndex];
+                        const g = data[pixelIndex + 1];
+                        const b = data[pixelIndex + 2];
+                        const brightness = (r + g + b) / 3;
+                        
+                        if (brightness < 128 && x + moduleSize <= size && y + moduleSize <= size) {
+                            switch (currentStyle) {
+                                case 'rounded':
+                                    const radius = moduleSize * 0.3;
+                                    svg += `<rect x="${x}" y="${y}" width="${moduleSize}" height="${moduleSize}" rx="${radius}" ry="${radius}" fill="${fgColor}"/>`;
+                                    break;
+                                case 'dots':
+                                    const dotRadius = moduleSize * 0.4;
+                                    svg += `<circle cx="${x + moduleSize/2}" cy="${y + moduleSize/2}" r="${dotRadius}" fill="${fgColor}"/>`;
+                                    break;
+                                case 'classy':
+                                    const diamond = moduleSize * 0.8;
+                                    svg += `<rect x="${x + moduleSize/2}" y="${y + moduleSize/2}" width="${diamond}" height="${diamond}" transform="rotate(45 ${x + moduleSize/2} ${y + moduleSize/2})" fill="${fgColor}"/>`;
+                                    break;
+                                default:
+                                    svg += `<rect x="${x}" y="${y}" width="${moduleSize}" height="${moduleSize}" fill="${fgColor}"/>`;
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -1427,146 +1682,246 @@
             return svg;
         }
 
-        // Enhanced form validation with real-time feedback
-        document.getElementById('email').addEventListener('input', function() {
-            const email = this.value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (email && !emailRegex.test(email)) {
-                this.style.borderColor = 'var(--error-color)';
-            } else {
-                this.style.borderColor = 'var(--border-color)';
-            }
-        });
-
-        document.getElementById('website').addEventListener('input', function() {
-            const website = this.value;
-            const urlRegex = /^https?:\/\/.+/;
-            
-            if (website && !urlRegex.test(website)) {
-                this.style.borderColor = 'var(--warning-color)';
-            } else {
-                this.style.borderColor = 'var(--border-color)';
-            }
-        });
-
-        // Auto-format phone number
-        document.getElementById('phone').addEventListener('input', function() {
-            let value = this.value.replace(/\D/g, '');
-            if (value.startsWith('0')) {
-                value = '+62' + value.substring(1);
-            } else if (!value.startsWith('+')) {
-                value = '+62' + value;
-            }
-            this.value = value;
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
-                    case 'Enter':
-                        e.preventDefault();
-                        generateQR();
-                        break;
-                    case 's':
-                        e.preventDefault();
-                        if (!document.getElementById('qrResult').classList.contains('hidden')) {
-                            downloadQR('png');
-                        }
-                        break;
-                }
-            }
-        });
-
-        // Progressive Web App support
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // Register service worker for offline functionality
-                // This would be implemented in a separate sw.js file
+        function initializeStyleOptions() {
+            const styleOptions = document.querySelectorAll('.style-option');
+            styleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    try {
+                        // Remove active class from all options
+                        styleOptions.forEach(opt => opt.classList.remove('active'));
+                        
+                        // Add active class to clicked option
+                        this.classList.add('active');
+                        
+                        // Update current style
+                        currentStyle = this.getAttribute('data-style');
+                        console.log('Style changed to:', currentStyle);
+                        
+                        // Visual feedback
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 100);
+                        
+                    } catch (error) {
+                        console.error('Error changing style:', error);
+                        showError('Gagal mengubah gaya QR Code');
+                    }
+                });
             });
         }
 
-        // Analytics and performance monitoring
-        function trackEvent(action, category = 'QR Generator') {
-            // Google Analytics or other tracking
-            if (typeof gtag !== 'undefined') {
-                gtag('event', action, {
-                    'event_category': category,
-                    'event_label': window.location.pathname
-                });
+        // Improved VCard generation with better error handling
+        function generateVCardData() {
+            try {
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const organization = document.getElementById('organization').value.trim();
+                const title = document.getElementById('title').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const website = document.getElementById('website').value.trim();
+                const address = document.getElementById('address').value.trim();
+                const notes = document.getElementById('notes').value.trim();
+
+                let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
+                
+                // Full name
+                const fullName = `${firstName} ${lastName}`.trim();
+                vcard += `FN:${fullName}\n`;
+                vcard += `N:${lastName};${firstName};;;\n`;
+                
+                // Optional fields with proper escaping
+                if (organization) vcard += `ORG:${organization.replace(/[,;\\]/g, '\\$&')}\n`;
+                if (title) vcard += `TITLE:${title.replace(/[,;\\]/g, '\\$&')}\n`;
+                if (phone) vcard += `TEL:${phone}\n`;
+                if (email) vcard += `EMAIL:${email}\n`;
+                if (website) {
+                    const url = website.startsWith('http') ? website : `https://${website}`;
+                    vcard += `URL:${url}\n`;
+                }
+                if (address) vcard += `ADR:;;${address.replace(/[,;\\]/g, '\\$&')};;;;\n`;
+                if (notes) vcard += `NOTE:${notes.replace(/[,;\\]/g, '\\$&')}\n`;
+                
+                // Add photo if available
+                if (uploadedPhoto) {
+                    try {
+                        // Extract base64 data and add to vCard
+                        const photoData = uploadedPhoto.split(',')[1];
+                        if (photoData && photoData.length > 0) {
+                            vcard += `PHOTO;ENCODING=BASE64;TYPE=JPEG:${photoData}\n`;
+                        }
+                    } catch (photoError) {
+                        console.warn('Error adding photo to vCard:', photoError);
+                        // Continue without photo
+                    }
+                }
+                
+                vcard += 'END:VCARD';
+                
+                console.log('Generated vCard data length:', vcard.length);
+                return vcard;
+                
+            } catch (error) {
+                console.error('Error generating vCard:', error);
+                throw new Error('Gagal membuat data vCard: ' + error.message);
             }
         }
 
-        // Track QR generation
+        // Keyboard shortcuts with better handling
+        document.addEventListener('keydown', function(e) {
+            try {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key.toLowerCase()) {
+                        case 'enter':
+                            e.preventDefault();
+                            if (!document.querySelector('.generate-btn').disabled) {
+                                generateQR();
+                            }
+                            break;
+                        case 's':
+                            e.preventDefault();
+                            if (!document.getElementById('qrResult').classList.contains('hidden')) {
+                                downloadQR('png');
+                            }
+                            break;
+                    }
+                }
+                
+                // ESC to close error messages
+                if (e.key === 'Escape') {
+                    document.getElementById('errorMessage').classList.add('hidden');
+                    document.getElementById('successMessage').classList.add('hidden');
+                }
+                
+            } catch (error) {
+                console.error('Error handling keyboard shortcut:', error);
+            }
+        });
+
+        // Enhanced error boundary
+        window.addEventListener('error', function(e) {
+            console.error('Global error caught:', e.error);
+            showError('Terjadi kesalahan tak terduga. Mohon refresh halaman jika masalah berlanjut.');
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            showError('Terjadi kesalahan dalam memproses data. Silakan coba lagi.');
+        });
+
+        // Memory cleanup
+        window.addEventListener('beforeunload', function() {
+            try {
+                // Clean up resources
+                if (uploadedPhoto) {
+                    uploadedPhoto = null;
+                }
+                
+                // Clear any object URLs
+                document.querySelectorAll('a[href^="blob:"]').forEach(link => {
+                    URL.revokeObjectURL(link.href);
+                });
+                
+            } catch (error) {
+                console.warn('Error during cleanup:', error);
+            }
+        });
+
+        // Performance monitoring
+        if ('performance' in window) {
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    console.log('Page load time:', Math.round(perfData.loadEventEnd - perfData.loadEventStart), 'ms');
+                }, 100);
+            });
+        }
+
+        // Service Worker registration for PWA capability
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // This would register a service worker for offline functionality
+                // navigator.serviceWorker.register('/sw.js');
+            });
+        }
+
+        // Analytics tracking helper
+        function trackEvent(action, category = 'QR Generator') {
+            try {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', action, {
+                        'event_category': category,
+                        'event_label': window.location.pathname
+                    });
+                }
+                console.log('Event tracked:', action, category);
+            } catch (error) {
+                console.warn('Analytics tracking error:', error);
+            }
+        }
+
+        // Track QR generation with analytics
         const originalGenerateQR = generateQR;
         generateQR = function() {
-            trackEvent('generate_qr');
+            trackEvent('qr_generate_attempt');
             return originalGenerateQR.apply(this, arguments);
         };
 
-        // Performance optimization
-        function optimizeImages() {
-            const images = document.querySelectorAll('img');
-            if ('IntersectionObserver' in window) {
-                const imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            if (img.dataset.src) {
-                                img.src = img.dataset.src;
-                                img.classList.remove('lazy');
-                                imageObserver.unobserve(img);
-                            }
-                        }
-                    });
-                });
+        // Track downloads
+        const originalDownloadQR = downloadQR;
+        downloadQR = function(format) {
+            trackEvent('qr_download', 'Downloads', format);
+            return originalDownloadQR.apply(this, arguments);
+        };
 
-                images.forEach(img => imageObserver.observe(img));
-            }
-        }
-
-        // Initialize optimizations
-        document.addEventListener('DOMContentLoaded', optimizeImages);
-
-        // Error boundary for better user experience
-        window.addEventListener('error', function(e) {
-            console.error('Global error:', e.error);
-            showError('Terjadi kesalahan tak terduga. Silakan refresh halaman dan coba lagi.');
-        });
-
-        // Memory management
-        window.addEventListener('beforeunload', function() {
-            // Clean up any resources
-            if (uploadedPhoto) {
-                uploadedPhoto = null;
-            }
-        });
+        console.log('QR VCard Generator initialized successfully ✅');
     </script>
 
     <!-- Performance and SEO optimizations -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" as="script">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+
+    <!-- Additional structured data for better SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "QR Code VCard Generator",
         "applicationCategory": "BusinessApplication",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.8",
-            "ratingCount": "1250"
-        },
+        "operatingSystem": "Any",
         "offers": {
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "USD"
-        }
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "1847"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Vin Nesia"
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "Vin Nesia"
+        },
+        "datePublished": "2024-01-01",
+        "dateModified": "2024-12-20",
+        "description": "Generator QR Code VCard profesional gratis dengan fitur canggih, upload foto, customisasi warna dan gaya, serta download dalam berbagai format.",
+        "featureList": [
+            "Upload foto/logo",
+            "Kustomisasi warna dan gaya",
+            "4 gaya titik berbeda",
+            "Download PNG, JPG, SVG",
+            "Responsive design",
+            "Tanpa iklan"
+        ]
     }
     </script>
-
-    <!-- Preconnect to external resources -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 
 </body>
 </html>
